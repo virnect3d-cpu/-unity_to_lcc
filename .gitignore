@@ -1,0 +1,58 @@
+# ---- Unity 생성물 ----
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+/_shots/
+
+# ---- IDE 자동 생성 ----
+.vs/
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# ---- 빌드 산출물 ----
+*.apk
+*.aab
+*.unitypackage
+*.app
+crashlytics-build.properties
+sysinfo.txt
+
+# ---- LCC 데이터 (레포에 넣지 않는다) ----
+# 이 레포는 "파이프라인"만 담는다. 실제 스캔 데이터와
+# 빌드된 GaussianSplatAsset 은 용량이 커서(씬당 200~620MB) 제외한다.
+/Assets/LCC_Drops/*
+!/Assets/LCC_Drops/.gitkeep
+/Assets/GaussianAssets/*
+!/Assets/GaussianAssets/.gitkeep
+/Assets/LCC_Generated/*
+!/Assets/LCC_Generated/.gitkeep
+# 주의: "*.lcc" 로 쓰면 폴더명 com.virnect.lcc 까지 매칭되어 패키지가
+# 통째로 제외된다. 스캔 데이터는 위 LCC_Drops 규칙으로 이미 걸러지므로
+# 확장자 전역 패턴은 쓰지 않는다.
+*.ply
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# 배치 컴파일 로그
+compile.log

@@ -1,0 +1,25 @@
+LCC ArasSplat localRotation — 사용자 수동 정합 (2026-05-12 저장)
+=================================================================
+
+씬 : LccMain.unity
+부모 : __ArasRoot
+표기 : Euler (X, Y, Z) 단위 도(°)
+
+GameObject                              localEulerAngles (x, y, z)
+----------------------------------------------------------------
+__ArasRoot                              (-90,      0,         0)        [Stage 2 frozen — Z-up→Y-up]
+ArasSplat_ShinWon_1st_Cutter            (0,        0,         0)        [inactive · identity]
+ArasSplat_ShinWon_Facility_01           (0,        0,         12)       [Z 12°]    [inactive]
+ArasSplat_ShinWon_Facility_04           (0,        0,         320)      [Z 320° = -40°]
+ArasSplat_ShinWon_Facility_05           (0,        0,         180)      [Z 180°]
+ArasSplat_ShinWon_Facility_06           (0,        0,         90.69076) [Z ~90.7°]
+ArasSplat_ShinWon_Facility_Middle       (-0,       -0,        356.10834) [Z ~356.1° = -3.9°]
+
+Quaternion 정밀 값 (참고용, 위 Euler 와 동일):
+__ArasRoot                              (-0.7071068, 0, 0, 0.7071068)
+ArasSplat_ShinWon_1st_Cutter            (0, 0, 0, 1)
+ArasSplat_ShinWon_Facility_01           (0, 0, 0.10452846, 0.9945219)
+ArasSplat_ShinWon_Facility_04           (0, 0, -0.3420201, 0.9396927)
+ArasSplat_ShinWon_Facility_05           (0, 0, 1, 0)
+ArasSplat_ShinWon_Facility_06           (0, 0, 0.7113564, 0.7028316)
+ArasSplat_ShinWon_Facility_Middle       (0, -5.588e-9, -0.03395452, 0.9994234)

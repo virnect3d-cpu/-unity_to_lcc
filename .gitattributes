@@ -1,0 +1,25 @@
+# Unity YAML 자산 — 텍스트로 다루되 줄바꿈은 건드리지 않는다.
+# (Unity 가 쓴 그대로 보존해야 merge/diff 가 안정적)
+*.unity      -text
+*.asset      -text
+*.prefab     -text
+*.mat        -text
+*.meta       -text
+*.anim       -text
+*.controller -text
+*.physicMaterial -text
+*.inputactions -text
+
+# 스크립트 / 문서는 일반 텍스트
+*.cs   text
+*.md   text
+*.json text
+*.txt  text
+
+# 바이너리 (이 레포엔 커밋하지 않지만, 실수 방지용 표시)
+*.bytes binary
+*.ply   binary
+*.lcc   binary
+*.fbx   binary
+*.png   binary
+*.jpg   binary

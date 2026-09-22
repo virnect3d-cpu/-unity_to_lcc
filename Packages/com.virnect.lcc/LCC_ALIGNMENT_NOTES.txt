@@ -1,0 +1,240 @@
+LCC 정합 + Unity 표준 임포트 컨벤션 (2026-05-12)
+==================================================
+
+원본 표:      docs/lcc-alignment-fields.md / .csv          (108 메타 필드)
+binary 표:    docs/lcc-alignment-binary-deepdive.md        (35 binary 필드)
+v2 계획:      docs/lcc-alignment-v2-plan.md                (코드 워크플로 + 알고리즘)
+추출 스크립트: _work/lcc_field_dossier.py + _work/lcc_binary_deepdive.py
+대상 데이터:   D:\unity\Samples\Lcc_Injector\Assets\LCC_Drops\
+스캔 6개:     ShinWon_1st_Cutter / ShinWon_Facility_01 / 04 / 05 / 06 / Middle
+
+
+✅ 표준 LCC 작업 단계 (2026-05-12 확정, 절대 손대지 말 것)
+============================================================
+
+Stage 1 : .lcc 폴더 드롭 → 자동 import + GaussianSplatAsset(Quality=High) 빌드 + 씬 spawn
+Stage 2 : X 축 -90° 회전 + Freeze Transformations (Maya 와 동일)
+Stage 3 : 사용자 박스(Cube) 기준 Z 축 회전만 fit (position/scale 금지, 다 000)
+
+
+------ Stage 1 — 자동 import 파이프 ------
+
+  .lcc 폴더 드롭 (Assets/LCC_Drops/)
+     → LccDropAutoImporter   (AssetPostprocessor 자동 발동)
+     → LccConverter          (splat-transform → .ply 임시)
+     → GaussianAssetBuilder  (Aras-P GaussianSplatAsset 빌드, Quality=High)
+     → 활성 씬에 자동 spawn:
+         Splat_<name>             (Z-up→Y-up 회전)
+           ├─ __LccCollider       (MeshCollider, proxy mesh, Z-up→Y-up 변환된 mesh,
+           │                       world identity)
+           └─ _ArasP              (GaussianSplatRenderer + asset, world identity)
+     → Hierarchy 자동 선택 + ping
+
+  Quality = High :
+    PSNR    : 57.77 dB
+    Compress: 2.94×
+    Position: Norm16
+    Scale   : Norm16
+    Color   : Float16 × 4
+    SH      : Norm11
+  → 이 프리셋 외로 만들지 말 것 (디테일 깨짐 / 색 어긋남 발생).
+
+  Packages/manifest.json 의 com.virnect.lcc 경로는 사용자 환경에 맞게 수정.
+  예: "file:C:/Users/<USER>/path/to/com.virnect.lcc"
+
+
+------ Stage 3 — 사용자 박스(Cube) 기준 Z 축 회전 fit ------
+
+  씬의 Cube GameObject 를 컨테이너로, 각 ArasSplat_* 을 박스 안으로 정렬.
+
+  철칙 :
+    localPosition : 절대 건드리지 말 것 — 항상 (0, 0, 0)
+    localScale    : 절대 건드리지 말 것 — 항상 (1, 1, 1)
+    허용 변경     : localRotation 의 Z 축 회전 0° 또는 ±90° 단 하나만
+
+  판정 (Cube 의 긴 horizontal 축이 Z 인 경우, 우리 데이터):
+    scan world X > Z  → localRotation = (0, 0, 90)
+    아니면            → localRotation = (0, 0, 0)
+
+  제외 : ArasSplat_ShinWon_Facility_Middle 은 fit 에서 제외, 항상 identity 유지.
+
+  메뉴 :
+    Virnect/LCC/📦 Fit ArasSplats into Cube
+       회전만 결정/적용, position 항상 (0,0,0)
+    Virnect/LCC/📦 Fit ArasSplats into Cube (refine)
+       회전 유지하면서 position 만 (0,0,0) 재핀
+    Virnect/LCC/📦 Reset ArasSplats to Frozen (Stage 1)
+       Stage 2 frozen identity 로 되돌리기
+
+  주의 : Fit 연속 호출 시 이미 회전된 splat 의 bounds 가 swap 되어 보여서
+         회전이 풀리는 케이스 있음. 항상 Reset → Fit 순서로 호출.
+  스케일 fitting (박스에 *완전히* 들어가게) 는 디테일 손실 동반.
+  명시 요청 없으면 추가 X.
+
+
+------ Stage 2 — X 축 -90° + Freeze Transform (Maya 와 동일) ------
+
+Maya 의 "Freeze Transformations + Delete History" 와 동일한 결과 만들기.
+다음 2-단 구조를 강제:
+
+  __ArasRoot                            ← localRotation = (-90, 0, 0)    [Z-up→Y-up]
+  ├── ArasSplat_ShinWon_1st_Cutter      ← pure identity (Frozen child)
+  ├── ArasSplat_ShinWon_Facility_01     ← pure identity
+  ├── ArasSplat_ShinWon_Facility_04     ← pure identity
+  ├── ArasSplat_ShinWon_Facility_05     ← pure identity
+  ├── ArasSplat_ShinWon_Facility_06     ← pure identity
+  └── ArasSplat_ShinWon_Facility_Middle ← pure identity
+
+  __ArasRoot 의 transform     : (0,0,0) / (-90,0,0) / (1,1,1)
+  ArasSplat_<name>.transform : (0,0,0) / (  0,0,0) / (1,1,1)   ← 완벽 identity
+
+왜 두 단? Maya Freeze 는 회전을 vertex 좌표에 굽어버린다.
+aras-p GaussianSplatAsset 의 position bytes 를 직접 재인코딩하는 것도 가능
+(Wigner-D SH 회전까지 다시 짜야 함, 비용 큼) — 같은 사용자 효과
+(= ArasSplat_ 의 Inspector 가 identity) 를 wrapper hoist 로 즉시 달성.
+Maya 에서 "group → freeze group" 으로 동일 효과 내는 패턴과 같음.
+
+구현 : Packages/com.virnect.lcc/Editor/LccArasSetup.cs
+        → 'Virnect/LCC/🎬 Wire up aras-p Gaussian Splats' 메뉴가
+          위 transform 을 자동 적용. 기존 GO 가 이미 있어도 매번 덮어씀.
+
+검증 : 2026-05-12 스크린샷 — 공장 바닥 + 컨베이어 디테일 정상,
+         거꾸로/옆으로 누운 현상 없음. ArasSplat_ 의 Inspector 모든
+         transform 필드가 깨끗하게 0 / 0 / 1 로 표시됨.
+
+손대지 말 것 :
+  화면이 거꾸로 보이거나 옆으로 누우면 transform 으로 "고쳐" 두지 말고
+  GaussianSplatAsset 의 Splat-PLY 가 Z-up (XGrids 기본) 으로 export
+  됐는지 점검 → 아니면 converter 옵션 고치고 .asset 재생성.
+
+
+정합 v2 — 핵심 결론
+====================
+
+🚨 LCC 파일 안에는 inter-scan 정합용 메타데이터가 **공식적으로 없음**.
+
+근거 (XGRIDS LCC 공식 whitepaper 2025-11 + 우리 binary 분석):
+
+  - mf_epsg = 0                                       (6개 전부)
+  - mf_offset = mf_shift = [0,0,0]                    (6개 전부)
+  - mf_scale = [1,1,1]                                (6개 전부)
+  - xform_pos = [0,0,0], xform_rot = identity         (6개 전부)
+  - poses.T_first ≈ (0,0,0)                           (6개 전부)
+  - data.bin tail u24 : norm_mean ≈ 0.87 (SH DC 추정) — 정합엔 무관
+  - reserved [26..32) = 0                              (6개 전부)
+  - index.bin chunk index (x|y<<16) → 각 scan 이 자기 (0,0)부터 시작
+  - mf_guid / task_id / attr_guid 는 단순 UUID — cross-scan 매핑 안 함
+
+XGRIDS 공식 LCC whitepaper 도 "no multi-scan registration" 명시.
+
+
+정합에 실제로 쓸 수 있는 값들 (분류)
+------------------------------------
+
+A. 거시 정합 (rough 1-shot) — bbox 기반
+   bbox_center_x/y/z          각 스캔의 무게중심 (m)
+   bbox_size_x/y/z            각 스캔의 차지 부피 (m)
+   pos_centroid_x/y/z         splat 분포 중심 (LOD4 통계, bbox 보다 정확)
+   pos_std_x/y/z              분포 표준편차
+
+B. 미세 정합 (small_gicp / Open3D ICP+FPFH) — 직접 splat 디코드
+   data.bin                   LccSplatDecoder.DecodeLod()
+   LOD 4 = 320K-480K pts      fast pairwise GICP 적합
+   LOD 0 = 5-15M pts          최종 refine 용
+
+C. 라디오메트릭 정합 (색 보정)
+   color_r_mean, color_g_mean, color_b_mean
+   color_brightness_mean
+   color_a_mean
+
+D. 신원 / 중복 검출
+   mf_guid (32-hex)
+   attr_guid (<5char>-<18digit task_id>)
+   task_id
+   attr_create_time
+   mode_size_bytes
+
+E. 메타 검증 (정합 *전*, 6개 다 일치해야 함)
+   mf_version = 5.0
+   mf_studio_version = 1.12.1
+   device_model = PortalCam
+   mf_cell_x = mf_cell_y = 30
+   collision.cell_x = collision.cell_y = 30
+   quality = 2
+   spawn_pos = [0, 0, 1.6]
+   spawn_rot = [0.7071068, 0, 0, 0.7071067]
+   attr_scale_min ≈ 4.54e-05
+   attr_opacity_min ≈ 0.005
+   attr_opacity_max ≈ 1.0
+
+F. SLAM trajectory (시각 검증)
+   poses.pose_count (2.9K - 8.2K)
+   poses.duration_s (582 - 976 sec)
+   poses.path_length_m (158 - 262 m)
+   poses.T_first / T_last
+   poses.T_min/max_x/y/z
+   poses.ts_start / ts_end
+
+G. 환경 splat (envscale*) — 무시 가능
+H. index.bin chunk fingerprint — 각 scan local 이라 cross-scan 매칭 불가
+
+
+정합 권장 알고리즘 (우선순위)
+------------------------------
+
+  Path A : RTK + EPSG at capture          (LCC manifest 자동 채워짐)
+  Path B : GCP CSV + LixelStudio Map Fusion (4점+ 측량 필요)
+  Path C : small_gicp on decoded splats    ★ 현재 우리 path
+           - github.com/koide3/small_gicp (MIT)
+           - Python API, PCL GICP 보다 2.4× 빠름
+           - LOD4 splat XYZ → 0.05m voxel downsample → pairwise GICP
+  Path D : Open3D RANSAC + ICP (FPFH features)
+  Path E : 수동 3-점 대응 + ICP refine (fallback)
+
+
+쓰면 *안* 되는 옵션 (시간 낭비)
+------------------------------
+
+  ❌ LoopSplat (3DV 2025)       — RGB-D 스트림 입력만
+  ❌ CaRtGS (RA-L 2025)         — 동일, SLAM front-end
+  ❌ G2S-ICP SLAM (arxiv 2025)  — 동일
+  ❌ GTS-SLAM (MDPI 2026)        — 동일
+  ❌ KISS-ICP                    — LiDAR sweep stream, 정적 X
+  ❌ ArUco / fiducial detection  — XGRIDS 가 LCC 에 embed 안 함
+
+전부 SLAM 시스템 — 이미 완성된 LCC 정적 파일에 적용 불가.
+
+
+향후 스캔 권장사항 (다음 데이터 받을 때)
+-----------------------------------------
+
+  ✅ Lixel L2 Pro / PortalCam RTK 활성화 → LCC manifest 의 epsg/offset 자동
+  ✅ 공통 GCP 4개+ 측량, CSV 포맷: Point Name,Easting,Northing,Height
+  ✅ scan-to-scan 15-30m 물리적 overlap (Alpine Reality Capture 권장)
+  ✅ 한 segment 당 5-10 scans (LixelStudio Map Fusion 제한)
+
+
+참고 자료
+---------
+
+LCC 포맷:
+  github.com/xgrids/LCCWhitepaper         (공식 사양, 2025-11)
+  github.com/xgrids/LCC-Unity-SDK         (공식 Unity SDK)
+  developer.xgrids.com
+
+XGRIDS Map Fusion / GCP:
+  www.alpinerealitycapture.com/lixel-guide/map-fusion
+  www.xgrids.com/lixelstudio
+
+3DGS Registration 연구 (참고만 — 우리엔 적용 X):
+  github.com/GradientSpaces/LoopSplat
+  github.com/DapengFeng/cartgs
+  arxiv.org/html/2507.18344                (G2S-ICP)
+
+점군 정합 도구 (실제 쓸 거):
+  github.com/koide3/small_gicp            ★ MIT, Python, fast GICP
+  Open3D registration_icp + FPFH RANSAC
+
+세부 알고리즘:
+  .cursor/rules/point-cloud-algorithms.mdc
+  .cursor/rules/lcc-file-format.mdc       (LCC + 정합 종합)

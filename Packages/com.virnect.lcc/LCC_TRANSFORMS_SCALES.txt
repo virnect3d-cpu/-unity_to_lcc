@@ -1,0 +1,17 @@
+LCC ArasSplat localScale — 사용자 수동 정합 (2026-05-12 저장)
+==============================================================
+
+씬 : LccMain.unity
+부모 : __ArasRoot
+
+GameObject                              localScale (x, y, z)
+----------------------------------------------------------------
+__ArasRoot                              (1, 1, 1)
+ArasSplat_ShinWon_1st_Cutter            (1, 1, 1)    [inactive]
+ArasSplat_ShinWon_Facility_01           (1, 1, 1)    [inactive]
+ArasSplat_ShinWon_Facility_04           (1, 1, 1)
+ArasSplat_ShinWon_Facility_05           (1, 1, 1)
+ArasSplat_ShinWon_Facility_06           (1, 1, 1)
+ArasSplat_ShinWon_Facility_Middle       (1, 1, 1)
+
+전부 identity (1,1,1) — Stage 3 철칙 ("scale 절대 변경 금지") 준수.
