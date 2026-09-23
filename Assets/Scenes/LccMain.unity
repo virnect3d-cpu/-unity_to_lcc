@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 107483854}
   - component: {fileID: 107483855}
   m_Layer: 0
-  m_Name: ArasSplat_ShinWon_Facility_06
+  m_Name: ArasSplat_Scan_E_Facility06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 140782956}
   - component: {fileID: 140782955}
   m_Layer: 0
-  m_Name: Splat_ShinWon_Facility_05
+  m_Name: Splat_Scan_D_Facility05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 234910575}
   - component: {fileID: 234910574}
   m_Layer: 0
-  m_Name: Splat_ShinWon_Facility_04
+  m_Name: Splat_Scan_C_Facility04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -558,7 +558,7 @@ GameObject:
   - component: {fileID: 306309890}
   - component: {fileID: 306309891}
   m_Layer: 0
-  m_Name: ArasSplat_ShinWon_Facility_01
+  m_Name: ArasSplat_Scan_B_Facility01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -798,7 +798,7 @@ GameObject:
   - component: {fileID: 483053558}
   - component: {fileID: 483053559}
   m_Layer: 0
-  m_Name: ArasSplat_ShinWon_Facility_Middle
+  m_Name: ArasSplat_Scan_F_Middle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -971,7 +971,7 @@ GameObject:
   - component: {fileID: 597381298}
   - component: {fileID: 597381297}
   m_Layer: 0
-  m_Name: Splat_ShinWon_1st_Cutter
+  m_Name: Splat_Scan_A_Cutter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1264,7 +1264,7 @@ GameObject:
   - component: {fileID: 1035234526}
   - component: {fileID: 1035234527}
   m_Layer: 0
-  m_Name: ArasSplat_ShinWon_Facility_05
+  m_Name: ArasSplat_Scan_D_Facility05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1379,7 +1379,7 @@ GameObject:
   - component: {fileID: 1167834520}
   - component: {fileID: 1167834519}
   m_Layer: 0
-  m_Name: Splat_ShinWon_Facility_Middle
+  m_Name: Splat_Scan_F_Middle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1489,7 +1489,7 @@ GameObject:
   - component: {fileID: 1417248255}
   - component: {fileID: 1417248256}
   m_Layer: 0
-  m_Name: ArasSplat_ShinWon_1st_Cutter
+  m_Name: ArasSplat_Scan_A_Cutter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1602,7 +1602,7 @@ GameObject:
   - component: {fileID: 1480471189}
   - component: {fileID: 1480471190}
   m_Layer: 0
-  m_Name: ArasSplat_ShinWon_Facility_04
+  m_Name: ArasSplat_Scan_C_Facility04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1663,7 +1663,7 @@ GameObject:
   - component: {fileID: 1647311120}
   - component: {fileID: 1647311119}
   m_Layer: 0
-  m_Name: Splat_ShinWon_Facility_06
+  m_Name: Splat_Scan_E_Facility06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1775,7 +1775,7 @@ GameObject:
   - component: {fileID: 1837693395}
   - component: {fileID: 1837693394}
   m_Layer: 0
-  m_Name: Splat_ShinWon_Facility_01
+  m_Name: Splat_Scan_B_Facility01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

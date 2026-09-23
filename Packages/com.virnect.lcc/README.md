@@ -67,10 +67,15 @@ Virnect → LCC → 🎬 Wire up aras-p Gaussian Splats
 ```
 
 이 메뉴는:
-- `__ArasRoot` GameObject 생성 (이미 있으면 재사용)
-- `LccBatchSetup` 의 6개 LCC 씬 이름 (`ShinWon_1st_Cutter`, `ShinWon_Facility_01/04/05/06/Middle`) 마다 자식 `ArasSplat_<name>` 생성
-- 각 자식에 `GaussianSplatRenderer` + 매핑된 `GaussianSplatAsset` 부착
+- `__ArasRoot` GameObject 생성 (이미 있으면 재사용) + `-90X` 적용
+- **프로젝트 안의 모든 `GaussianSplatAsset` 을 자동 발견** — 이름 하드코딩 없음
+  - `<name>_lod0`, `<name>_lod1` … 접미사는 벗겨 `<name>` 으로 묶고,
+    가장 낮은 LOD 번호(= 최고 밀도)를 대표로 고른다
+  - 접미사가 없으면 파일명 그대로 사용
+- 에셋마다 자식 `ArasSplat_<name>` 생성 + `GaussianSplatRenderer` 부착
 - **자체 `LccSplatRenderer` 들은 비활성화** (이중 렌더 방지)
+
+> 에셋이 하나도 없으면 콘솔에 안내를 찍고 중단한다.
 
 부착되는 photoreal 프리셋:
 
@@ -120,8 +125,8 @@ Stage 1 직후 raw 상태에 X 축 `-90°` 회전을 적용 + Maya 의 *Freeze T
 
 ```
 __ArasRoot                              ← localRotation = (-90, 0, 0)    [Z-up→Y-up 변환 담당]
-├── ArasSplat_ShinWon_1st_Cutter        ← pure identity (Frozen child)
-├── ArasSplat_ShinWon_Facility_01       ← pure identity
+├── ArasSplat_Scan_A_Cutter             ← pure identity (Frozen child)
+├── ArasSplat_Scan_B_Facility01         ← pure identity
 └── ...
 ```
 
@@ -151,11 +156,12 @@ __ArasRoot                              ← localRotation = (-90, 0, 0)    [Z-up
 - `localScale` 절대 건드리지 말 것 — **항상 `(1, 1, 1)` 유지**
 - 허용된 변경은 **`localRotation` 의 Z 축 회전 (`0°` 또는 `±90°`) 단 한 가지**
 
-판정 — Cube 의 긴 horizontal 축이 Z 인 경우 (우리 데이터):
+판정 — Cube 의 긴 horizontal 축이 Z 인 경우:
 - scan world X > Z → `localRotation = (0, 0, 90)` (X↔Z 스왑)
 - 아니면 → `localRotation = (0, 0, 0)`
 
-제외: `ArasSplat_ShinWon_Facility_Middle` 은 fit 에서 제외, 항상 identity 유지.
+제외: 움직이면 안 되는 앵커 스캔이 있으면 `LccCubeFitter.s_Excluded` 에
+`"ArasSplat_<name>"` 을 넣는다. 기본값은 빈 배열(전부 fit 대상).
 
 **자동 메뉴:**
 - `Virnect/LCC/📦 Fit ArasSplats into Cube` — 회전만, position=(0,0,0) 강제
@@ -227,5 +233,7 @@ Unity Mesh 자산을 만들고 씬의 MeshCollider 에 연결합니다. **Python
 
 ## 테스트 데이터
 
-`<scan-data-root>/ShinWon_1st_Cutter.lcc`
-(9.97M splats · 5 LOD · 326 MB)
+이 레포에는 스캔 데이터가 포함되어 있지 않다. 개발 중 검증에 쓴 기준 샘플은
+단일 `.lcc` 한 개 (9.97M splats · 5 LOD · 326 MB) 규모였고, 같은 급이면
+동일한 절차로 동작한다. 데이터 준비 방법은 레포 루트
+[`README.md`](../../README.md) 의 "데이터 준비" 참고.

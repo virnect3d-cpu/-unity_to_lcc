@@ -6,7 +6,7 @@ binary 표:    docs/lcc-alignment-binary-deepdive.md        (35 binary 필드)
 v2 계획:      docs/lcc-alignment-v2-plan.md                (코드 워크플로 + 알고리즘)
 추출 스크립트: _work/lcc_field_dossier.py + _work/lcc_binary_deepdive.py
 대상 데이터:   D:\unity\Samples\Lcc_Injector\Assets\LCC_Drops\
-스캔 6개:     ShinWon_1st_Cutter / ShinWon_Facility_01 / 04 / 05 / 06 / Middle
+스캔 6개:     Scan_A_Cutter / Scan_B_Facility01 / 04 / 05 / 06 / Middle
 
 
 ✅ 표준 LCC 작업 단계 (2026-05-12 확정, 절대 손대지 말 것)
@@ -56,7 +56,7 @@ Stage 3 : 사용자 박스(Cube) 기준 Z 축 회전만 fit (position/scale 금�
     scan world X > Z  → localRotation = (0, 0, 90)
     아니면            → localRotation = (0, 0, 0)
 
-  제외 : ArasSplat_ShinWon_Facility_Middle 은 fit 에서 제외, 항상 identity 유지.
+  제외 : 앵커로 쓸 스캔이 있으면 fit 에서 제외하고 identity 유지 (LccCubeFitter.s_Excluded).
 
   메뉴 :
     Virnect/LCC/📦 Fit ArasSplats into Cube
@@ -78,12 +78,12 @@ Maya 의 "Freeze Transformations + Delete History" 와 동일한 결과 만들�
 다음 2-단 구조를 강제:
 
   __ArasRoot                            ← localRotation = (-90, 0, 0)    [Z-up→Y-up]
-  ├── ArasSplat_ShinWon_1st_Cutter      ← pure identity (Frozen child)
-  ├── ArasSplat_ShinWon_Facility_01     ← pure identity
-  ├── ArasSplat_ShinWon_Facility_04     ← pure identity
-  ├── ArasSplat_ShinWon_Facility_05     ← pure identity
-  ├── ArasSplat_ShinWon_Facility_06     ← pure identity
-  └── ArasSplat_ShinWon_Facility_Middle ← pure identity
+  ├── ArasSplat_Scan_A_Cutter      ← pure identity (Frozen child)
+  ├── ArasSplat_Scan_B_Facility01     ← pure identity
+  ├── ArasSplat_Scan_C_Facility04     ← pure identity
+  ├── ArasSplat_Scan_D_Facility05     ← pure identity
+  ├── ArasSplat_Scan_E_Facility06     ← pure identity
+  └── ArasSplat_Scan_F_Middle ← pure identity
 
   __ArasRoot 의 transform     : (0,0,0) / (-90,0,0) / (1,1,1)
   ArasSplat_<name>.transform : (0,0,0) / (  0,0,0) / (1,1,1)   ← 완벽 identity
